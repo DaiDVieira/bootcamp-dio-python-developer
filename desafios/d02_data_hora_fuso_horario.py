@@ -50,12 +50,38 @@ def criar_usuario(usuarios, /):
     print("----- Usuário criado com sucesso! -----")
     
 
-def criar_conta(agencia, numero_conta, usuario):
-    pass
+def criar_conta(usuarios, contas, agencia, numero_conta, /):
+    if usuarios != []:
+        cpf = input("Digite o CPF do usuário: ")
+        usuario = filtar_usuario(cpf, usuarios)
+        print(f"teste usuario: {usuario}")
+        if usuario != None:
+            contas.append({"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario})
+            numero_conta += 1
+        else:
+            print(f"Usuário de CPF {cpf} não está cadastrado. Operação cancelada.")
+            return
+    else:
+        print("Não há usuários cadastrados. Cadastre um usuário antes de criar uma conta.")
+
+    for conta in contas:
+        print(conta)
+
+    print(numero_conta)
+
+    print("----- Conta criada com sucesso! -----")
+
+    return numero_conta
 
 def filtar_usuario(cpf, usuarios, /):
-    usuario_filtrado = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
-    return usuario_filtrado[0] if usuario_filtrado else None
+    for usuario in usuarios:
+        if usuario["cpf"] == cpf:
+            posicao_usuario = usuarios.index(cpf)
+            return usuario[posicao_usuario]
+        else:
+            return None  
+    # usuario_filtrado = [usuarios.index(cpf) for usuario in usuarios if usuario["cpf"] == cpf]
+    # return usuario_filtrado[usuarios.index(cpf)] if usuario_filtrado else None
 
 def listar_contas(lista_contas):
     pass
@@ -80,6 +106,11 @@ def main():
     LIMITE_SAQUES = 3
 
     usuarios = []
+    contas = []
+    numero_conta = 1
+    AGENCIA = "0001"
+
+    print(usuarios)
 
     while True:
         opcao = input(menu)
@@ -99,7 +130,7 @@ def main():
             exibir_extrato(saldo, extrato)
 
         elif opcao == "4":
-            print("Nova conta")
+            numero_conta = criar_conta(usuarios, contas, AGENCIA, numero_conta)
 
         elif opcao == "5":
             print("Listar contas")
