@@ -33,6 +33,33 @@ def sacar(saldo_atual, valor, extrato, numero_saques, limite_valor, /):
 
     return saldo_atual, extrato, numero_saques
 
+def criar_usuario(usuarios, /):
+    cpf = input("Digite o CPF (somente números): ")
+
+    usuario = filtar_usuario(cpf, usuarios)
+    if usuario != None:
+        print(f"Usuário com CPF {cpf} já está cadastrado.")
+        return
+
+    nome = input("Digite o nome: ")
+    data_nascimento = input("Digite a data de nascimento (somente números): ")
+    endereco = input("Digite o endereço (logradouro, número - bairro - cidade/sigla estado): ")
+
+    usuarios.append({"nome": nome, "cpf": cpf, "data_nascimento": data_nascimento, "endereco": endereco})
+
+    print("----- Usuário criado com sucesso! -----")
+    
+
+def criar_conta(agencia, numero_conta, usuario):
+    pass
+
+def filtar_usuario(cpf, usuarios, /):
+    usuario_filtrado = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    return usuario_filtrado[0] if usuario_filtrado else None
+
+def listar_contas(lista_contas):
+    pass
+
 def main():
     menu = """
 -------------- MENU --------------
@@ -51,6 +78,8 @@ def main():
     extrato = ""
     numero_saques = 0
     LIMITE_SAQUES = 3
+
+    usuarios = []
 
     while True:
         opcao = input(menu)
@@ -76,7 +105,7 @@ def main():
             print("Listar contas")
 
         elif opcao == "6":
-            print("Novo usuário")
+            criar_usuario(usuarios)
 
         elif opcao == "0":
             print("Obrigada por utilizar nosso sistema!")
