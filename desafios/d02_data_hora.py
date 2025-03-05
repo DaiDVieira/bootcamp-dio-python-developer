@@ -10,7 +10,7 @@ def depositar(saldo_atual, valor, extrato, data, /):
 
     return saldo_atual, extrato
 
-def exibir_extrato(saldo_atual, extrato, data, /):
+def exibir_extrato(saldo_atual, /, *, extrato, data):
     print("-------------------- Extrato -------------------")
     if not extrato:
         print("Não foram realizadas movimentações.")    
@@ -19,15 +19,15 @@ def exibir_extrato(saldo_atual, extrato, data, /):
     print(f"\nSaldo:\t\t R$ {saldo_atual:.2f}\t {data}")
     print("------------------------------------------------")
 
-def sacar(saldo_atual, valor, extrato, numero_saques, limite_valor, data, /):
+def sacar(*, saldo, valor, extrato, numero_saques, limite, data):
     if valor > 0:
-        if saldo_atual < valor:
+        if saldo < valor:
             print("Saldo insuficiente. Não será possível realizar o saque.")
         else:
-            if valor >= limite_valor:
-                print(f"Não é possível sacar valores maiores que R$ {limite_valor}. Tente novamente.")
+            if valor >= limite:
+                print(f"Não é possível sacar valores maiores que R$ {limite}. Tente novamente.")
             else:
-                saldo_atual -= valor
+                saldo -= valor
                 numero_saques += 1
                 extrato += f"Saque:\t\t R$ {valor:.2f}\t {data}\n"
 
@@ -36,7 +36,7 @@ def sacar(saldo_atual, valor, extrato, numero_saques, limite_valor, data, /):
 
     print("------------------------------------------------")
 
-    return saldo_atual, extrato, numero_saques
+    return saldo, extrato, numero_saques
 
 def criar_usuario(usuarios, /):
     cpf = input("Digite o CPF (somente números): ")
@@ -59,7 +59,7 @@ def criar_conta(usuarios, agencia, numero_conta, /):
     if usuarios != []:
         cpf = input("Digite o CPF do usuário: ")
         usuario = filtar_usuario(cpf, usuarios)
-        print(f"teste usuario: {usuario}")
+        
         if usuario:
             print("--------- Conta criada com sucesso! ---------")
             return ({"agencia": agencia, "numero_conta": numero_conta, "usuario": usuario})
@@ -123,11 +123,11 @@ def main():
                 print(f"Número máximo de {LIMITE_SAQUES} saques diários atingido. Tente novamente amanhã.")
             else:
                 valor = float(input("\nDigite o valor do saque: "))
-                saldo, extrato, numero_saques = sacar(saldo, valor, extrato, numero_saques, limite, data)
+                saldo, extrato, numero_saques = sacar(saldo=saldo, valor=valor, extrato=extrato, numero_saques=numero_saques, limite=limite, data=data)
             print(f"{data_hora_atual} - SAQUE")
 
         elif opcao == "3":
-            exibir_extrato(saldo, extrato, data)
+            exibir_extrato(saldo, extrato=extrato, data=data)
             print(f"{data_hora_atual} - EXTRATO")
 
         elif opcao == "4":
